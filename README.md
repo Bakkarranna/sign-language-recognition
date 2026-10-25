@@ -68,10 +68,26 @@ src/sign_language/
 ## Results
 
 `results/results_table.md` is the current table; `results/sign_metrics.json`
-and `results/figures/` hold the detailed numbers and plots. WLASL100 is a
-small dataset: expect top-1 well under 1.0 - published WLASL100 numbers with
-much heavier models sit around 0.4-0.8 top-1, so treat anything above the
-baselines as real signal.
+and `results/figures/` hold the detailed numbers and plots.
+
+Headline (test split, 162 instances over 100 glosses, chance = 0.01 top-1):
+
+| model | top-1 | macro F1 | top-5 |
+| --- | --- | --- | --- |
+| SignGRU (biGRU, 2x256) | 0.1111 | 0.0822 | 0.2963 |
+| per-frame RandomForest (200 trees, mean vote) | 0.1728 | 0.1327 | 0.3580 |
+| nearest-mean (cosine, temporal mean) | 0.0370 | 0.0188 | 0.1914 |
+
+### Figures
+
+| | |
+| --- | --- |
+| ![Normalised landmarks](results/figures/sample_landmarks.png) | ![Training curves](results/figures/training_curves.png) |
+| ![Confusion matrix](results/figures/confusion_matrix.png) | ![Per-gloss recall](results/figures/per_class_recall.png) |
+
+WLASL100 is a small dataset: expect top-1 well under 1.0 - published WLASL100
+numbers with much heavier models sit around 0.4-0.8 top-1, so treat anything
+above the baselines as real signal.
 
 ## Tests
 

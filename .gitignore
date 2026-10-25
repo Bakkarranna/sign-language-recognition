@@ -15,6 +15,11 @@ dist/
 data/raw/videos/
 data/raw/*.log
 
+# Upstream annotation file (12 MB) and the generated landmark cache
+data/raw/WLASL_v0.3.json
+data/processed/landmarks/
+data/raw/video_manifest.json
+
 # MediaPipe model binary (13 MB, fetched by tools/fetch_landmarker.py)
 models/*.task
 
