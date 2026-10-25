@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# Test / lint caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Downloaded WLASL videos and the ~38 GB annotation archive
+data/raw/videos/
+data/raw/*.log
+
+# MediaPipe model binary (13 MB, fetched by tools/fetch_landmarker.py)
+models/*.task
+
+# Model checkpoints and raw test predictions
+results/*.pt
+results/*.npz
+
+# Local scratch
+*.log
+.DS_Store
