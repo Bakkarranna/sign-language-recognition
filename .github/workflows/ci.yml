@@ -40,12 +40,13 @@ jobs:
           import importlib
           for m in ('augment', 'baseline', 'config', 'dataset', 'download',
                     'evaluate', 'extract', 'metadata', 'model',
-                    'results_table', 'train', 'visualize'):
+                    'results_table', 'synthetic', 'train', 'visualize'):
               importlib.import_module(f'sign_language.{m}')
           print('all modules import')
           "
       - name: Smoke training on synthetic landmarks
         run: |
+          python -m sign_language.synthetic
           python -m sign_language.train --smoke --epochs 2
           python -m sign_language.results_table
           python -m sign_language.visualize

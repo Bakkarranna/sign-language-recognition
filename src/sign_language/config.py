@@ -2,14 +2,23 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_ROOT / "data"
+
+
+def _env_path(name: str, default: Path) -> Path:
+    """Allow the data/results roots to be relocated (tests, CI smoke runs)."""
+    value = os.environ.get(name)
+    return Path(value).expanduser() if value else default
+
+
+DATA_DIR = _env_path("SIGN_LANGUAGE_DATA_DIR", PROJECT_ROOT / "data")
+RESULTS_DIR = _env_path("SIGN_LANGUAGE_RESULTS_DIR", PROJECT_ROOT / "results")
 RAW_DIR = DATA_DIR / "raw"
 VIDEO_DIR = RAW_DIR / "videos"
 LANDMARK_DIR = DATA_DIR / "processed" / "landmarks"
-RESULTS_DIR = PROJECT_ROOT / "results"
 MODEL_PATH = RESULTS_DIR / "sign_gru.pt"
 
 # Official WLASL annotation file (from github.com/dxli94/WLASL, start_kit/).
