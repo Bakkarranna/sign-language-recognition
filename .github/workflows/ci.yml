@@ -38,9 +38,10 @@ jobs:
           python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
           python -c "
           import importlib
-          for m in ('augment', 'baseline', 'config', 'dataset', 'download',
-                    'evaluate', 'extract', 'metadata', 'model',
-                    'results_table', 'synthetic', 'train', 'visualize'):
+          for m in ('augment', 'baseline', 'config', 'dashboard', 'dataset',
+                    'download', 'evaluate', 'extract', 'metadata', 'model',
+                    'report', 'results_table', 'synthetic', 'train',
+                    'visualize'):
               importlib.import_module(f'sign_language.{m}')
           print('all modules import')
           "
@@ -49,6 +50,8 @@ jobs:
           python -m sign_language.synthetic
           python -m sign_language.train --smoke --epochs 2
           python -m sign_language.results_table
+          python -m sign_language.report      # report_data.json
+          python -m sign_language.dashboard   # docs/index.html (synthetic preview)
           python -m sign_language.visualize
       - name: Lint
         run: python -m ruff check .
