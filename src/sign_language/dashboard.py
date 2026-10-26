@@ -25,7 +25,6 @@ Usage::
 
 from __future__ import annotations
 
-import base64
 import html
 import json
 import shutil
@@ -443,7 +442,7 @@ PAGE_JS = r"""
 def _toc_html(report: dict) -> str:
     links = ['<a href="#metrics">Headline</a>',
              '<a href="#models">Models</a>']
-    links = [f'<a href="#figures">Figures</a>'] + links
+    links = ['<a href="#figures">Figures</a>'] + links
     for s in report.get("sections", []):
         links.append(f'<a href="#{esc(s["id"])}">{esc(s.get("title", s["id"]))}</a>')
     return '<nav class="toc" aria-label="Sections">' + "".join(links) + "</nav>"
