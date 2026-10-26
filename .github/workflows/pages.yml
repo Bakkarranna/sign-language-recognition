@@ -1,0 +1,40 @@
+name: Pages
+
+# Publishes the static results dashboard in docs/ to GitHub Pages.
+# The dashboard is generated locally from the real results and committed, so CI
+# must never regenerate it: the smoke job trains on synthetic landmarks and
+# would overwrite the real numbers.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the dashboard is committed
+        run: |
+          test -f docs/index.html || { echo "::error::docs/index.html missing - run \`python -m sign_language.dashboard\` and commit it"; exit 1; }
+          test -d docs/figures || { echo "::error::docs/figures missing"; exit 1; }
+          echo "dashboard present"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4
