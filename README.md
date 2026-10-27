@@ -34,6 +34,8 @@ glosses**, and every number in `results/` is computed on those.
 .venv/Scripts/python.exe -m sign_language.train        # biGRU + metrics + checkpoint
 .venv/Scripts/python.exe -m sign_language.visualize    # figures
 .venv/Scripts/python.exe -m sign_language.results_table
+.venv/Scripts/python.exe -m sign_language.report         # report_data.json
+.venv/Scripts/python.exe -m sign_language.dashboard      # docs/index.html
 ```
 
 ## Layout
@@ -52,6 +54,16 @@ src/sign_language/
   evaluate.py       top-1/top-5, macro F1, per-class table, confusion matrix
   visualize.py      training curves, confusion matrix, hardest-gloss recall, samples
   results_table.py  results_table.md / .csv and per-gloss recall csv
+  report.py          report_data.json: every section the console renders
+  dashboard.py       report_data.json -> the self-contained docs/index.html
+```
+
+Beyond `src/`:
+
+```
+docs/                the static results console published to GitHub Pages
+results/             metrics, tables, logs and the figures above
+.github/workflows/   CI: install, pytest, ruff, import + synthetic smoke; Pages: publish docs/
 ```
 
 ## Design decisions
@@ -88,6 +100,31 @@ Headline (test split, 162 instances over 100 glosses, chance = 0.01 top-1):
 WLASL100 is a small dataset: expect top-1 well under 1.0 - published WLASL100
 numbers with much heavier models sit around 0.4-0.8 top-1, so treat anything
 above the baselines as real signal.
+
+### Live results console
+
+The per-class tables, the per-epoch validation history, the confusion matrix as
+a heatmap, the hardest glosses and the per-test predictions are published as a
+static site - open it in a browser with nothing installed:
+
+**https://bakkarranna.github.io/sign-language-recognition/**
+
+It is generated from the committed JSON artefacts, never retrained, so the page
+cannot disagree with the tables above. `report.py` gathers everything the
+console renders into `results/report_data.json`, and `dashboard.py` turns that
+into one HTML file with the figures inlined:
+
+```bash
+python -m sign_language.report         # results/report_data.json
+python -m sign_language.dashboard      # writes docs/index.html
+```
+
+Both take no arguments and both take the report or the figures from disk only,
+so a missing `results/report_data.json` fails the run instead of producing a
+half-empty page. No JavaScript, no remote fonts and no CDN - the page opens
+from a `file://` URL and serves unchanged from GitHub Pages, which also means
+Pages never rebuilds it (the CI smoke job trains on synthetic landmarks and
+would overwrite the real numbers).
 
 ## Tests
 
