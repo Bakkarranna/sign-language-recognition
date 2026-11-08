@@ -8,6 +8,9 @@ Pipeline: download every WLASL100 video -> extract pose and hand landmarks with
 MediaPipe Holistic -> normalise to a fixed-length sequence -> train a
 bidirectional GRU -> evaluate top-1/top-5 against simple baselines.
 
+**Live results console (GitHub Pages):** <https://bakkarranna.github.io/sign-language-recognition/> — the
+per-class tables, figures and per-test predictions below, in a browser.
+
 ## Dataset
 
 | item | value |
@@ -36,7 +39,25 @@ glosses**, and every number in `results/` is computed on those.
 .venv/Scripts/python.exe -m sign_language.results_table
 .venv/Scripts/python.exe -m sign_language.report         # report_data.json
 .venv/Scripts/python.exe -m sign_language.dashboard      # docs/index.html
+.venv/Scripts/python.exe -m sign_language.replay        # test-split predictions, on demand
 ```
+
+### Replay app
+
+The committed checkpoint can be replayed against the real test split and stepped
+through in the browser:
+
+```bash
+.venv/Scripts/python.exe -m streamlit run streamlit_app.py
+```
+
+It loads `results/sign_gru.pt` plus the cached landmarks (no dataset download,
+no retraining) and walks the 162 test instances one at a time: the true gloss,
+the predicted gloss, the top-5 probabilities as a bar chart, and the normalised
+landmarks of the selected frame with the model's confidence over the sequence.
+The replay lives in `sign_language/replay.py` so the Streamlit app stays a thin
+view layer, and its numbers are asserted against `results/sign_metrics.json` in
+the tests.
 
 ## Layout
 
@@ -56,7 +77,10 @@ src/sign_language/
   results_table.py  results_table.md / .csv and per-gloss recall csv
   report.py          report_data.json: every section the console renders
   dashboard.py       report_data.json -> the self-contained docs/index.html
+  replay.py          checkpoint + landmark cache -> per-instance predictions
 ```
+tests/              pytest unit tests over synthetic landmarks
+streamlit_app.py   replay UI over the committed checkpoint
 
 Beyond `src/`:
 

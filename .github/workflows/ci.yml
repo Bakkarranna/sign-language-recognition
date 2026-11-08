@@ -40,7 +40,7 @@ jobs:
           import importlib
           for m in ('augment', 'baseline', 'config', 'dashboard', 'dataset',
                     'download', 'evaluate', 'extract', 'metadata', 'model',
-                    'report', 'results_table', 'synthetic', 'train',
+                    'report', 'replay', 'results_table', 'synthetic', 'train',
                     'visualize'):
               importlib.import_module(f'sign_language.{m}')
           print('all modules import')

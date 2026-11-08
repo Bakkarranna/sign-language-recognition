@@ -15,6 +15,7 @@ dependencies = [
     "torch",
     "scikit-learn",
     "matplotlib",
+    "streamlit",
 ]
 
 [project.optional-dependencies]
