@@ -105,8 +105,11 @@ def build_report(results_dir: Path | None = None) -> dict:
     # Macro-F1 over the classes that actually appear in the test split: a class
     # with 0 support has no F1 to contribute and averaging over all 100 would
     # understate the model. The bootstrap resamples whole instances.
+    # evaluate.py numbers per_class by the highest class index seen in the
+    # split, so a class absent from both y_true and y_pred has no entry at all;
+    # a missing entry counts the same as 0 support.
     seen = [i for i, g in enumerate(labels_list)
-            if test["per_class"][g]["support"] > 0]
+            if test["per_class"].get(g, {}).get("support", 0) > 0]
     n = len(labels)
     macro_draws = np.array([
         _macro_f1(labels[sel], top1[sel], labels_list, seen)
